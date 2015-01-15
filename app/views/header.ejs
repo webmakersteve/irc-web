@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+
+
+	<title><%-title %></title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="/components/webcomponentsjs/webcomponents.js">
+  </script>
+
+  <link rel="import"
+    href="/components/core-header-panel/core-header-panel.html">
+  <link rel="import"
+    href="/components/core-toolbar/core-toolbar.html">
+  <link rel="import"
+    href="/components/paper-tabs/paper-tabs.html">
+
+    <!-- my elements -->
+
+  <link rel="import" href="/elements/chat-box.html">
+
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="http://localhost:35729/livereload.js"></script>
+
+</head>
+
+<body unresolved>
+
+	<core-header-panel>
+
+    <core-toolbar>
+      <paper-tabs id="tabs" selected="all" class="" self-end>
+        <paper-tab name="all">All</paper-tab>
+        <paper-tab name="stephen">Stephen</paper-tab>
+      </paper-tabs>
+    </core-toolbar>
+
+    <!-- main page content will go here -->
+    <div class="container" layout vertical center>

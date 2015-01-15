@@ -1,0 +1,44 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import"
+    href="/components/paper-input/paper-input.html">
+<link rel="import"
+    href="/components/paper-button/paper-button.html">
+
+<link rel="import" href="service/chat-service.html">
+<link rel="import" href="chat-card.html">
+
+<polymer-element name="chat-form" attributes="messageHandler">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    </style>
+    
+	<paper-input label="Message" id="Message"></paper-input>
+	<paper-button raised id="Submit">
+		<core-icon icon="favorite"></core-icon>
+		Submit
+	</paper-button>
+
+  </template>
+
+  <script>
+  Polymer({
+    ready: function() {
+
+      this.$.Submit.onclick = (function() {
+        var value = this.$.Message.value || false;
+        if (!value) return;
+
+        this.messageHandler(value);
+        this.$.Message.value = "";
+
+      }).bind(this);
+      
+    }
+  });
+  </script>
+</polymer-element>

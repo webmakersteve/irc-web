@@ -1,0 +1,110 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<polymer-element name="chat-service" hidden attributes="messages socket messageHandle">
+<script>
+
+  Polymer('chat-service', {
+
+    /**
+     * Socket
+     *
+     * @event core-response
+     */
+
+    socket: false,
+    /**
+     * Fired when a response is received.
+     *
+     * @event core-response
+     */
+
+    /**
+     * Fired when an error is received.
+     *
+     * @event core-error
+     */
+
+    /**
+     * Fired whenever a response or an error is received.
+     *
+     * @event core-complete
+     */
+
+    /**
+     * The error for the current request, or null if it hasn't
+     * completed yet or the request resulted in success.
+     *
+     * @attribute error
+     * @type Object
+     * @default null
+     */
+    error: null,
+
+    /**
+     * Message handle
+     *
+     * @attribute loading
+     * @type boolean
+     * @default false
+     */
+    messageHandle: false,
+
+    /**
+     * Set the withCredentials flag on the request.
+     *
+     * @attribute withCredentials
+     * @type boolean
+     * @default false
+     */
+    withCredentials: false,
+
+    sendMessage: function(value) {
+      this.socket.emit(this.messageHandle, value);
+      this.messages.unshift({
+        from: "Me",
+        message: value
+      });
+    },
+
+    created: function() {
+      this.messages = [];
+    },
+
+    ready: function() {
+
+      this.socket.on(this.messageHandle, this.processMessage.bind(this));
+      this.socket.on('chat error', this.processError.bind(this));
+      this.socket.on('chat notification', this.processNotification.bind(this));
+    },
+
+    processMessage: function(message) {
+      console.log(message.from + ' => ' + message.message);
+      this.messages.unshift(message);
+    },
+
+    processNotification: function(obj) {
+      var status = obj.code == "ok" ? true : false;
+      var handle = obj.handle || false;
+      var message = obj.message;
+
+      switch (handle) {
+        case 'login':
+
+          break;
+
+      }
+
+    },
+
+    processError: function(err) {
+      
+    },
+
+    complete: function(xhr) {
+      this.fire('core-complete', {response: xhr.status, xhr: xhr});
+    }
+
+  });
+
+</script>
+</polymer-element>

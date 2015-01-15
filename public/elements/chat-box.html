@@ -1,0 +1,60 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import"
+    href="/components/paper-input/paper-input.html">
+<link rel="import"
+    href="/components/paper-button/paper-button.html">
+
+<link rel="import" href="service/chat-service.html">
+<link rel="import" href="chat-card.html">
+<link rel="import" href="chat-form.html">
+
+<polymer-element name="chat-box">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    chat-card {
+      margin-bottom: 30px;
+    }
+    </style>
+    
+    <chat-service id="Service" messages="{{messages}}" socket="{{socket}}" messageHandle="{{messageHandle}}"></chat-service>
+
+    <div layout vertical center>
+      <chat-form id="Form" messageHandler="{{sendMessage}}"></chat-form>
+      <template repeat="{{message in messages}}">
+        <chat-card
+          favorite="false"
+          on-favorite-tap="{{replyTo}}">
+          <h3>{{message.from}}</h3>
+          <p>{{message.message}}</p>
+        </chat-card>
+      </template>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    messageHandle: "chat message",
+    loggedIn: false,
+    ready: function() {
+      console.log("Done loading chat box");
+
+      this.$.Form.service = this.$.Service;
+      this.$.Service.onLogin((function(data) {
+        alert('Logged in');
+        this.loggedIn = true;
+      }).bind(this));
+    },
+    replyTo: function() {
+
+    },
+    sendMessage: function(message) {
+      this.service.sendMessage(message);
+    }
+  });
+  </script>
+</polymer-element>

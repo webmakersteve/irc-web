@@ -1,0 +1,18 @@
+
+	</div>
+
+</core-header-panel>
+
+<script>
+  var tabs = document.querySelector('paper-tabs');
+  var list = document.querySelector('post-list');
+
+  tabs.addEventListener('core-select', function() {
+    list.show = tabs.selected;
+  });
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+
+</html>
