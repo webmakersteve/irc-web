@@ -1,0 +1,68 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import"
+href="/components/paper-input/paper-input.html">
+<link rel="import"
+href="/components/paper-button/paper-button.html">
+
+
+<polymer-element name="login-box" attributes="loginHandler">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+
+    paper-input {
+      width: 100%;
+    }
+    </style>
+
+    <content></content>
+
+    <div id="validate">
+      <paper-input-decorator label="Name" id="Name" floatingLabel error="Nickname is required!" validate="^[0-9]+$" error="Please enter a nickname">
+        <input is="core-input" required>
+      </paper-input-decorator>
+
+    </paper-input>
+    </div>
+    <paper-input label="Password" id="Password" floatingLabel></paper-input>
+    <paper-button raised id="Submit">
+      Submit
+    </paper-button>
+
+  </template>
+
+  <script>
+  Polymer({
+    ready: function() {
+
+      this.$.Submit.onclick = (function() {
+        var username = this.$.Name.querySelector('input').value || '';
+
+        var password = this.$.Password.value || '';
+
+        if (this.validate()) {
+          this.loginHandler(username, password);
+        }
+
+      }).bind(this);
+
+    },
+
+    validate: function() {
+      var success = true;
+      var $d = this.$.validate.querySelectorAll('paper-input-decorator');
+      Array.prototype.forEach.call($d, function(d) {
+        d.isInvalid = !d.querySelector('input').validity.valid;
+        if (d.isInvalid) success = false;
+      });
+
+      return success;
+
+    }
+  });
+  </script>
+</polymer-element>

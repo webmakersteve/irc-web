@@ -5,8 +5,8 @@
 <link rel="import"
     href="/components/paper-button/paper-button.html">
 
-<link rel="import" href="service/chat-service.html">
-<link rel="import" href="chat-card.html">
+<link href="/components/paper-input/paper-autogrow-textarea.html" rel="import">
+
 
 <polymer-element name="chat-form" attributes="messageHandler">
   <template>
@@ -15,11 +15,20 @@
       display: block;
       width: 100%;
     }
+
+    paper-input {
+      width: 100%;
+    }
     </style>
-    
-	<paper-input label="Message" id="Message"></paper-input>
+
+
+  <paper-input-decorator label="Message" id="Message" floatingLabel>
+    <paper-autogrow-textarea>
+      <textarea></textarea>
+    </paper-autogrow-textarea>
+  </paper-input-decorator>
+
 	<paper-button raised id="Submit">
-		<core-icon icon="favorite"></core-icon>
 		Submit
 	</paper-button>
 
@@ -30,14 +39,14 @@
     ready: function() {
 
       this.$.Submit.onclick = (function() {
-        var value = this.$.Message.value || false;
+        var value = this.$.Message.querySelector('textarea').value || false;
         if (!value) return;
 
         this.messageHandler(value);
-        this.$.Message.value = "";
+        this.$.Message.querySelector('textarea').value = "";
 
       }).bind(this);
-      
+
     }
   });
   </script>

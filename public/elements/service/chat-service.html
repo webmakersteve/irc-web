@@ -70,16 +70,19 @@
       this.messages = [];
     },
 
+    login: function(username, password) {
+      
+      this.socket.emit('login', {
+        username: username || "guest",
+        password: password || ""
+      });
+    },
+
     ready: function() {
 
       this.socket.on(this.messageHandle, this.processMessage.bind(this));
       this.socket.on('chat error', this.processError.bind(this));
       this.socket.on('chat notification', this.processNotification.bind(this));
-
-      this.socket.emit('login', {
-        username: "ThisIsTheTime",
-        password: "none"
-      });
 
     },
 
@@ -90,27 +93,28 @@
 
     callbacks: {},
 
-    onLogin: function(cb) {
-      this.callbacks['login'] = this.callbacks['login'] || [];
-      this.callbacks['login'].push(cb);
+    on: function(name, cb) {
+      this.callbacks[name] = this.callbacks[name] || [];
+      this.callbacks[name].push(cb);
+    },
+
+    emit: function(name, data) {
+      var callbacksList = this.callbacks[name] || [];
+      if (callbacksList.length > 0) {
+
+        for (var x in callbacksList) {
+          callbacksList[x](data);
+        }
+
+      }
     },
 
     processNotification: function(obj) {
       var status = obj.code == "ok" ? true : false;
       var handle = obj.handle || false;
-      var message = obj.message;
+      var message = obj.message || {};
 
-      switch (handle) {
-        case 'login':
-          var loginCallbacks = this.callbacks['login'] || [];
-          if (loginCallbacks.length > 0) {
-            for (var x in loginCallbacks) {
-              loginCallbacks[x](obj);
-            }
-          }
-          break;
-
-      }
+      this.emit(handle, message);
 
     },
 

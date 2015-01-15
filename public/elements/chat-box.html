@@ -9,6 +9,8 @@
 <link rel="import" href="chat-card.html">
 <link rel="import" href="chat-form.html">
 
+<link rel="import" href="login-box.html">
+
 <polymer-element name="chat-box">
   <template>
     <style>
@@ -24,9 +26,9 @@
     <chat-service id="Service" messages="{{messages}}" socket="{{socket}}" messageHandle="{{messageHandle}}"></chat-service>
 
     <div layout vertical center>
-      <div hidden?="{{loggedIn}}">
-        Logging in...
-      </div>
+      <login-box hidden?="{{loggedIn}}" id="Login" loginHandler="{{sendLogin}}">
+        <p>Enter in a username and an optional password to authenticate to the IRC server</p>
+      </login-box>
       <chat-form hidden?="{{!loggedIn}}" id="Form" messageHandler="{{sendMessage}}"></chat-form>
       <template repeat="{{message in messages}}">
         <chat-card
@@ -46,15 +48,30 @@
     ready: function() {
 
       this.$.Form.service = this.$.Service;
-      this.$.Service.onLogin((function(data) {
+      this.$.Login.service = this.$.Service;
+
+      this.$.Service.on('login', (function (data) {
         this.loggedIn = true;
       }).bind(this));
+
+      this.$.Service.on('names', (function (data) {
+        console.log(data);
+      }).bind(this));
+
+      //this.$.Login.
+
     },
     replyTo: function() {
 
     },
     sendMessage: function(message) {
+
       this.service.sendMessage(message);
+    },
+    sendLogin: function(username, password) {
+      var u = username || '';
+      var p = password || '';
+      this.service.login(u, p)
     }
   });
   </script>
