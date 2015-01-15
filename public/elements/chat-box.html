@@ -20,11 +20,14 @@
       margin-bottom: 30px;
     }
     </style>
-    
+
     <chat-service id="Service" messages="{{messages}}" socket="{{socket}}" messageHandle="{{messageHandle}}"></chat-service>
 
     <div layout vertical center>
-      <chat-form id="Form" messageHandler="{{sendMessage}}"></chat-form>
+      <div hidden?="{{loggedIn}}">
+        Logging in...
+      </div>
+      <chat-form hidden?="{{!loggedIn}}" id="Form" messageHandler="{{sendMessage}}"></chat-form>
       <template repeat="{{message in messages}}">
         <chat-card
           favorite="false"
@@ -41,11 +44,9 @@
     messageHandle: "chat message",
     loggedIn: false,
     ready: function() {
-      console.log("Done loading chat box");
 
       this.$.Form.service = this.$.Service;
       this.$.Service.onLogin((function(data) {
-        alert('Logged in');
         this.loggedIn = true;
       }).bind(this));
     },

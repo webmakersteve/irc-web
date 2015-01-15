@@ -10,7 +10,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 io.on('connection', function(socket) {
-	
+
 	var channel = '#ingenuitydesign';
 
 	socket.on('login', function(credentials) {
@@ -62,4 +62,3 @@ io.on('connection', function(socket) {
 });
 
 http.listen(config.port);
-

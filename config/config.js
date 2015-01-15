@@ -24,7 +24,7 @@ var config = {
     app: {
       name: 'desktop'
     },
-    port: 3000,
+    port: process.env.port || 3000,
   }
 };
 

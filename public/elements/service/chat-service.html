@@ -75,11 +75,24 @@
       this.socket.on(this.messageHandle, this.processMessage.bind(this));
       this.socket.on('chat error', this.processError.bind(this));
       this.socket.on('chat notification', this.processNotification.bind(this));
+
+      this.socket.emit('login', {
+        username: "ThisIsTheTime",
+        password: "none"
+      });
+
     },
 
     processMessage: function(message) {
       console.log(message.from + ' => ' + message.message);
       this.messages.unshift(message);
+    },
+
+    callbacks: {},
+
+    onLogin: function(cb) {
+      this.callbacks['login'] = this.callbacks['login'] || [];
+      this.callbacks['login'].push(cb);
     },
 
     processNotification: function(obj) {
@@ -89,7 +102,12 @@
 
       switch (handle) {
         case 'login':
-
+          var loginCallbacks = this.callbacks['login'] || [];
+          if (loginCallbacks.length > 0) {
+            for (var x in loginCallbacks) {
+              loginCallbacks[x](obj);
+            }
+          }
           break;
 
       }
@@ -97,7 +115,7 @@
     },
 
     processError: function(err) {
-      
+
     },
 
     complete: function(xhr) {
