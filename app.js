@@ -61,4 +61,4 @@ io.on('connection', function(socket) {
 
 });
 
-http.listen(config.port);
+http.listen(process.env.PORT || config.port);
