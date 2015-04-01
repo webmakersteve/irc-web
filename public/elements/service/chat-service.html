@@ -60,10 +60,6 @@
 
     sendMessage: function(value) {
       this.socket.emit(this.messageHandle, value);
-      this.messages.unshift({
-        from: "Me",
-        message: value
-      });
     },
 
     created: function() {
@@ -71,7 +67,7 @@
     },
 
     login: function(username, password) {
-      
+
       this.socket.emit('login', {
         username: username || "guest",
         password: password || ""
@@ -83,7 +79,15 @@
       this.socket.on(this.messageHandle, this.processMessage.bind(this));
       this.socket.on('chat error', this.processError.bind(this));
       this.socket.on('chat notification', this.processNotification.bind(this));
+      this.socket.on('chat message sent', this.processSentMessage.bind(this));
 
+    },
+
+    processSentMessage: function(message) {
+      this.messages.unshift({
+        from: "Me",
+        message: message.message
+      });
     },
 
     processMessage: function(message) {

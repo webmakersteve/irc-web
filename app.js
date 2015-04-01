@@ -1,5 +1,6 @@
 var express = require('express'),
-  config = require('./config/config');
+  config = require('./config/config'),
+  request = require('request');
 
 var app = express();
 var irc = require('irc');
@@ -30,7 +31,9 @@ io.on('connection', function(socket) {
 		});
 
 		client.addListener('error', function(err) {
-			console.log(err);
+      console.log('Error');
+      console.log(err);
+			socket.emit('error', err);
 		});
 
 		client.addListener('quit', function(message) {
@@ -77,8 +80,30 @@ io.on('connection', function(socket) {
 			});
 
 			socket.on('chat message', function(msg) {
-				console.log(msg);
-				client.say(channel, msg);
+				// convert message
+        request.post({
+          url: 'http://us.blizzard.com/en-us/bmotesparser/',
+          form: {
+            input: msg
+          }
+        }, function(err, response, body) {
+          if (err || response.statusCode !== 200) {
+
+            client.say(channel, msg);
+            socket.emit('chat message sent', {
+              message: msg
+            });
+
+          } else {
+
+            client.say(channel, body);
+            socket.emit('chat message sent', {
+              message: body
+            });
+
+          }
+        });
+
 			});
 
 		});
