@@ -1,0 +1,43 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<polymer-element name="notifications-service" hidden attributes="messages socket messageHandle">
+<script>
+  Polymer('notifications-service', {
+
+    notifications: !!Notification || false,
+    soundFile: '',
+
+    create: function (text, title, icon) {
+      if (!icon) icon = 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png';
+      if (!title) title = 'IRC Web';
+
+      var notification = new Notification(title, {
+        icon: icon,
+        body: text
+      });
+
+      notification.onclick = function () {
+        if (window.focus) window.focus();
+      }
+
+      return notification;
+
+    },
+
+    request: function () {
+      if (this.granted()) return;
+        Notification.requestPermission();
+
+    },
+
+    granted: function () {
+      if (!this.notifications) return false;
+      if (Notification.permission !== "granted") return false;
+
+      return true;
+    }
+
+  });
+
+</script>
+</polymer-element>
